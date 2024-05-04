@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>文本分割器</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  textarea {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  .button:hover {
+    background-color: #0056b3;
+  }
+  .output {
+    margin-top: 20px;
+  }
+  .text-block {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .copy-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    padding: 5px 10px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .copy-button:hover {
+    background: #218838;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>文本分割工具</h1>
+  <textarea id="inputText" placeholder="输入文本"></textarea>
+  <button class="button" onclick="splitText()">分割</button>
+  <button class="button" onclick="resetText()">重置</button>
+  <div class="output" id="output"></div>
+</div>
+
+<script>
+  const sensitiveWords = ['习近平', '政治'];
+
+  function splitText() {
+    const inputText = document.getElementById('inputText').value;
+    const outputDiv = document.getElementById('output');
+    outputDiv.innerHTML = ''; // Clear previous output
+
+    // Replace sensitive words
+    let modifiedText = inputText;
+    sensitiveWords.forEach(word => {
+      const regex = new RegExp(word, 'g');
+      modifiedText = modifiedText.replace(regex, word.split('').join('/'));
+    });
+
+    // Split by paragraphs or words
+    const blocks = modifiedText.split('\n');
+    blocks.forEach(block => {
+      if (block.trim() !== '') {
+        const textBlock = document.createElement('div');
+        textBlock.className = 'text-block';
+        textBlock.textContent = block;
+        
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-button';
+        copyButton.textContent = '复制';
+        copyButton.onclick = function() {
+          navigator.clipboard.writeText(block);
+        };
+        
+        textBlock.appendChild(copyButton);
+        outputDiv.appendChild(textBlock);
+      }
+    });
+  }
+
+  function resetText() {
+    document.getElementById('inputText').value = '';
+    document.getElementById('output').innerHTML = '';
+  }
+</script>
+</body>
+</html>
