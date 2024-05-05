@@ -2,6 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="https://pic.imgdb.cn/item/64b479301ddac507ccb75174.jpg" type="image/x-icon">
 <title>文本分割器</title>
 <style>
   body {
@@ -62,6 +64,31 @@
   .copy-button:hover {
     background: #218838;
   }
+
+  @media only screen and (max-width: 600px) {
+    body {
+      padding: 10px;
+    }
+    .container {
+      box-shadow: none;
+      padding: 10px;
+    }
+    textarea {
+      font-size: 14px;
+    }
+    .button {
+      font-size: 14px;
+      padding: 5px 10px;
+    }
+    .text-block {
+      font-size: 14px;
+    }
+    .copy-button {
+      right: 5px;
+      top: 5px;
+      padding: 3px 6px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -76,10 +103,21 @@
 <script>
   const sensitiveWords = ['习近平', '政治'];
 
+  // 在页面加载时，从 localStorage 获取用户的输入
+  window.onload = function() {
+    const savedText = localStorage.getItem('inputText');
+    if (savedText) {
+      document.getElementById('inputText').value = savedText;
+    }
+  };
+
   function splitText() {
     const inputText = document.getElementById('inputText').value;
     const outputDiv = document.getElementById('output');
     outputDiv.innerHTML = ''; // Clear previous output
+
+    // 将用户的输入保存到 localStorage
+    localStorage.setItem('inputText', inputText);
 
     // Replace sensitive words
     let modifiedText = inputText;
@@ -112,7 +150,10 @@
   function resetText() {
     document.getElementById('inputText').value = '';
     document.getElementById('output').innerHTML = '';
+    // 重置文本时，也清除 localStorage 中的数据
+    localStorage.removeItem('inputText');
   }
 </script>
+
 </body>
 </html>
